@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "66039194338",
+    "firebase_url": "https://impactful-veld-232810.firebaseio.com",
+    "project_id": "impactful-veld-232810",
+    "storage_bucket": "impactful-veld-232810.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:66039194338:android:3f99f6eea2051a40",
+        "android_client_info": {
+          "package_name": "com.example.calories"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "66039194338-6j7qssl5257at98oqivrrheu847d9jbo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.calories",
+            "certificate_hash": "f4748857efa4fa4dd4c59e64dc3f935dc4ccd1b9"
+          }
+        },
+        {
+          "client_id": "66039194338-3v4hlq9d395e0n304if7ub2vg668t0dr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDE4Yq_zSfnq2wFFj49sr6EWkTBtUVB-6Y"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "66039194338-3v4hlq9d395e0n304if7ub2vg668t0dr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
