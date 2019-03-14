@@ -9,7 +9,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -21,24 +20,19 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, DataHandler {
     private static final String TAG = "MainActivity";
     private static final int REQUEST_TAKE_IMAGE = 1;
     private Button Sbutton;
     private StorageReference mStorageRef;
     private static String imagePath = "";
+    private CommunicationHandler handler;
 
 
     @Override
@@ -63,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        handler = CommunicationHandler.getInstance(this, this);
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
         Sbutton = findViewById(R.id.Tbutton);
@@ -108,32 +103,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
         startActivityForResult(takePictureIntent, REQUEST_TAKE_IMAGE);
     }
-
-
     private void uploadFile(Bitmap bitmap) {
+        handler.sendImage(bitmap);
         Toast.makeText(this, "Uploading Image", Toast.LENGTH_LONG).show();
-        StorageReference mountainImagesRef = mStorageRef.child("images/" + String.valueOf(SystemClock.currentThreadTimeMillis()) + ".jpg");
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-        byte[] data = byteArrayOutputStream.toByteArray();
-        UploadTask uploadTask = mountainImagesRef.putBytes(data);
-        uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle unsuccessful uploads
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                taskSnapshot.getStorage().getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Uri> task) {
-                        Log.d("downloadUrl-->", "" + task.getResult());
-                        Toast.makeText(MainActivity.this, "Uploading Image Done", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        });
     }
+
+    @Override
+    public void onDataReceived(Data data) {
+        Log.d(TAG, "onDataReceived() called with: data = [" + data + "]");
+    }
+
+//    private void uploadFile(Bitmap bitmap) {
+//        Toast.makeText(this, "Uploading Image", Toast.LENGTH_LONG).show();
+//        StorageReference mountainImagesRef = mStorageRef.child("images/" + String.valueOf(SystemClock.currentThreadTimeMillis()) + ".jpg");
+//        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+//        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+//        byte[] data = byteArrayOutputStream.toByteArray();
+//        UploadTask uploadTask = mountainImagesRef.putBytes(data);
+//        uploadTask.addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception exception) {
+//                // Handle unsuccessful uploads
+//            }
+//        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//            @Override
+//            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                taskSnapshot.getStorage().getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<Uri> task) {
+//                        Log.d("downloadUrl-->", "" + task.getResult());
+//                        Toast.makeText(MainActivity.this, "Uploading Image Done", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//            }
+//        });
+//    }
 }
 
